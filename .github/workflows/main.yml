@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Validate OpenAPI definition
-        uses: ./swagger-editor-validate@v1
+        uses: ./swagger-editor-validate
         with:
           swagger-editor-url: http://localhost/
           definition-file: api-yrdy/devices-api_swagger.json
