@@ -1,0 +1,1014 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "A RESTful API for exploring Elisa devices catalog and managing device orders. Requests are rate limited to 10 requests per second.",
+    "title": "Elisa Devices API",
+    "version": "1",
+    "contact": {
+      "name": "Elisa B2B API Team",
+      "url": "https://yrityksille.elisa.fi/elisa-api"
+    }
+  },
+  "host": "api.elisa.fi",
+  "basePath": "/devices/v1",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/catalog": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "description": "Returns Elisa catalog of devices, its variants and prices",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/apiKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/catalog"
+            },
+            "examples": {
+              "salesItems": [
+                {
+                  "salesItemId": "SLI-DEV-SF-0008373",
+                  "name": "iPhone 6s Plus",
+                  "variants": [
+                    {
+                      "variantId": "VAR-DEV-SF-0008361",
+                      "name": "Apple iPhone 6s Plus 128GB kulta",
+                      "prices": [
+                        {
+                          "priceOptionId": "PRI-DEV-SF-0008382",
+                          "type": "MONTHLY",
+                          "amount": 36,
+                          "payments": 24
+                        }
+                      ]
+                    },
+                    {
+                      "variantId": "VAR-DEV-SF-0008362",
+                      "name": "Apple iPhone 6s Plus 32GB hopea",
+                      "prices": [
+                        {
+                          "priceOptionId": "PRI-DEV-SF-0008383",
+                          "type": "MONTHLY",
+                          "amount": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "404": {
+            "$ref": "#/definitions/responses/404"
+          },
+          "413": {
+            "$ref": "#/definitions/responses/413"
+          },
+          "500": {
+            "$ref": "#/definitions/responses/500"
+          },
+          "503": {
+            "$ref": "#/definitions/responses/503"
+          },
+          "522": {
+            "$ref": "#/definitions/responses/522"
+          },
+          "default": {
+            "$ref": "#/definitions/responses/default"
+          }
+        }
+      }
+    },
+    "/availability/{variantId}": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "description": "API to verify specific Elisa device variants availability",
+        "parameters": [
+          {
+            "$ref": "#/parameters/apiKey"
+          },
+          {
+            "$ref": "#/parameters/variantId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/variantAvailabilities"
+              }
+            },
+            "examples": {
+              "variantAvailabilities": [
+                {
+                  "variantId": "VAR-DEV-CA-0004954",
+                  "availabilityLabel": "10-15"
+                },
+                {
+                  "variantId": "VAR-DEV-CA-0004251",
+                  "availabilityLabel": "10-15"
+                },
+                {
+                  "variantId": "VAR-DEV-CA-0004275",
+                  "availabilityLabel": "0"
+                }
+              ]
+            }
+          },
+          "404": {
+            "$ref": "#/definitions/responses/404"
+          },
+          "413": {
+            "$ref": "#/definitions/responses/413"
+          },
+          "500": {
+            "$ref": "#/definitions/responses/500"
+          },
+          "503": {
+            "$ref": "#/definitions/responses/503"
+          },
+          "522": {
+            "$ref": "#/definitions/responses/522"
+          },
+          "default": {
+            "$ref": "#/definitions/responses/default"
+          }
+        }
+      }
+    },
+    "/subscriptions": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "description": "Returns Elisa device subscriptions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/apiKey"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/billingAccountNumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "integer"
+                },
+                "offset": {
+                  "type": "integer"
+                },
+                "total": {
+                  "type": "integer"
+                },
+                "subscriptions": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Subscription"
+                  }
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "limit": "3",
+                "offset": "0",
+                "total": "3",
+                "subscriptions": [
+                  {
+                    "subscriptionId": "SUB001603049",
+                    "subscriptionName": "Apple iPhone 6s Plus 32GB hopea",
+                    "subscriptionStatus": "ACTIVE",
+                    "contact": {
+                      "contactId": "MCON600030963",
+                      "contactName": "Test Tester"
+                    },
+                    "billingAccountId": "601366269",
+                    "imei": "000000000000002759,AB-26-07-15-60-10",
+                    "employeePaymentActivated": false
+                  },
+                  {
+                    "subscriptionId": "SUB001742218",
+                    "subscriptionName": "Apple iPhone 6s Plus 32GB hopea",
+                    "subscriptionStatus": "ACTIVE",
+                    "contact": null,
+                    "billingAccountId": "601366269",
+                    "imei": "000000000000003838",
+                    "employeePaymentActivated": false,
+                    "costCenter": {
+                      "costCenterName": "3014"
+                    },
+                    "subscriptionReference": "1234567890"
+                  },
+                  {
+                    "subscriptionId": "SUB001742201",
+                    "subscriptionName": "Apple iPhone 6s Plus 32GB hopea",
+                    "subscriptionStatus": "ACTIVE",
+                    "contact": null,
+                    "billingAccountId": "601366269",
+                    "imei": "000000000000003835",
+                    "employeePaymentActivated": false,
+                    "costCenter": {
+                      "costCenterName": "3014"
+                    },
+                    "subscriptionReference": "1234567898"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/definitions/responses/404"
+          },
+          "413": {
+            "$ref": "#/definitions/responses/413"
+          },
+          "500": {
+            "$ref": "#/definitions/responses/500"
+          },
+          "503": {
+            "$ref": "#/definitions/responses/503"
+          },
+          "522": {
+            "$ref": "#/definitions/responses/522"
+          },
+          "default": {
+            "$ref": "#/definitions/responses/default"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "description": "Returns Elisa device subscription details",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/apiKey"
+          },
+          {
+            "$ref": "#/parameters/subscriptionId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "subscription": {
+                  "type": "object",
+                  "$ref": "#/definitions/Subscription"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "subscription": {
+                  "subscriptionId": "SUB001603049",
+                  "subscriptionName": "Apple iPhone 6s Plus 32GB hopea",
+                  "subscriptionStatus": "ACTIVE",
+                  "contact": {
+                    "contactId": "MCON600030963",
+                    "contactName": "Test Tester"
+                  },
+                  "billingAccountId": "601366269",
+                  "imei": "000000000000033333,AB-26-07-15-60-10",
+                  "employeePaymentActivated": false
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/definitions/responses/404"
+          },
+          "413": {
+            "$ref": "#/definitions/responses/413"
+          },
+          "500": {
+            "$ref": "#/definitions/responses/500"
+          },
+          "503": {
+            "$ref": "#/definitions/responses/503"
+          },
+          "522": {
+            "$ref": "#/definitions/responses/522"
+          },
+          "default": {
+            "$ref": "#/definitions/responses/default"
+          }
+        }
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "The details of the order for the device.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/apiKey"
+          },
+          {
+            "name": "order",
+            "in": "body",
+            "description": "The details of the order to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/orderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/orderResponse"
+            },
+            "examples": {
+              "orderResponse": {
+                "orderId": "dd85dd27-6ca5-4808-bdf2-5349a41055c2",
+                "status": "SUCCESS"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/definitions/responses/404"
+          },
+          "413": {
+            "$ref": "#/definitions/responses/413"
+          },
+          "500": {
+            "$ref": "#/definitions/responses/500"
+          },
+          "503": {
+            "$ref": "#/definitions/responses/503"
+          },
+          "522": {
+            "$ref": "#/definitions/responses/522"
+          },
+          "default": {
+            "$ref": "#/definitions/responses/default"
+          }
+        }
+      }
+    },
+    "/orders/{orderId}/status": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "The status details of the order for the device.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/apiKey"
+          },
+          {
+            "$ref": "#/parameters/orderId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "order": {
+                  "type": "object",
+                  "$ref": "#/definitions/OrderStatus"
+                }
+              }
+            },
+            "examples": {
+              "application/json": {
+                "order": {
+                  "orderId": "CN001603049",
+                  "subscriptionId": "SUB001603049",
+                  "orderStatus": "COMPLETED",
+                  "deliveryDetails": {
+                    "trackingCode": "3433600030963",
+                    "imei": "000000000000033333"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/definitions/responses/404"
+          },
+          "413": {
+            "$ref": "#/definitions/responses/413"
+          },
+          "500": {
+            "$ref": "#/definitions/responses/500"
+          },
+          "503": {
+            "$ref": "#/definitions/responses/503"
+          },
+          "522": {
+            "$ref": "#/definitions/responses/522"
+          },
+          "default": {
+            "$ref": "#/definitions/responses/default"
+          }
+        }
+      }
+    },
+    "/redemption": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "$ref": "#/parameters/apiKey"
+          },
+          {
+            "name": "order",
+            "in": "body",
+            "description": "The details of the order to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/redemptionOrderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/redemptionOrderResponse"
+            },
+            "examples": {
+              "redemptionOrderResponse": {
+                "orderId": "dd85dd27-6ca5-4808-bdf2-5349a41055c2",
+                "status": "SUCCESS"
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/definitions/responses/404"
+          },
+          "413": {
+            "$ref": "#/definitions/responses/413"
+          },
+          "500": {
+            "$ref": "#/definitions/responses/500"
+          },
+          "503": {
+            "$ref": "#/definitions/responses/503"
+          },
+          "522": {
+            "$ref": "#/definitions/responses/522"
+          },
+          "default": {
+            "$ref": "#/definitions/responses/default"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "apiKey": {
+      "name": "x-api-key",
+      "in": "header",
+      "description": "Devices API Key",
+      "required": true,
+      "type": "string"
+    },
+    "variantId": {
+      "name": "variantId",
+      "in": "path",
+      "description": "Variant id of specific device",
+      "required": true,
+      "type": "string"
+    },
+    "limit": {
+      "name": "limit",
+      "in": "query",
+      "description": "Return at most this many results.",
+      "required": false,
+      "type": "integer"
+    },
+    "offset": {
+      "name": "offset",
+      "in": "query",
+      "description": "Start returning results after skipping this many records.",
+      "required": false,
+      "type": "string"
+    },
+    "billingAccountNumber": {
+      "name": "billingAccountNumber",
+      "in": "query",
+      "description": "Id of Billing account.",
+      "required": false,
+      "type": "string"
+    },
+    "subscriptionId": {
+      "name": "subscriptionId",
+      "in": "path",
+      "description": "Id of device subscription in format (SUBnnnnnnnnn).",
+      "required": true,
+      "type": "string"
+    },
+    "orderId": {
+      "name": "orderId",
+      "in": "path",
+      "description": "Id of device order in format (CNnnnnnnnnnnn).",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "catalog": {
+      "properties": {
+        "salesItems": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "salesItemId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "variants": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "variantId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "prices": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "priceOptionId": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "ONETIME",
+                              "MONTHLY"
+                            ]
+                          },
+                          "amount": {
+                            "type": "number"
+                          },
+                          "payments": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Bad Request - There are miscellaneous errors with the request, for example, mismatches between the request and what is allowed for the operation."
+      },
+      "401": {
+        "description": "Unauthorized or 403 Forbidden - Authentication errors."
+      },
+      "404": {
+        "description": "Not Found - Invalid URL path."
+      },
+      "413": {
+        "description": "Request Entity Too Large - The request data was too large. This is based on the SOA Input Size quota."
+      },
+      "500": {
+        "description": "Internal Server Error - This generic error message appears when an unexpected condition was encountered and a more specific message is not suitable."
+      },
+      "503": {
+        "description": "Service Unavailable - The caller has hit a throttle or the request was rejected because the Atom is starting or stopping."
+      },
+      "522": {
+        "description": "Connection Timed Out - This message is returned to the client when the SOA Worker Maximum Execution Time has been exceeded."
+      },
+      "default": {
+        "description": "Unidentified Exception"
+      }
+    },
+    "variantAvailabilities": {
+      "type": "object",
+      "properties": {
+        "variantId": {
+          "type": "string"
+        },
+        "availabilityLabel": {
+          "type": "string",
+          "enum": [
+            "0",
+            "1-9",
+            "10-15",
+            "16-25",
+            "+25"
+          ]
+        }
+      }
+    },
+    "orderRequest": {
+      "type": "object",
+      "properties": {
+        "deviceOrder": {
+          "type": "object",
+          "required": [
+            "businessId",
+            "accountMasterId",
+            "billingAccountId",
+            "deliveryAddress",
+            "contactId",
+            "orderItems"
+          ],
+          "properties": {
+            "businessId": {
+              "type": "string",
+              "description": "ID of the ordering Account."
+            },
+            "accountMasterId": {
+              "type": "string",
+              "description": "ID of the account (company or organization) to own the subscription ordered. Format MCOMnnnnnnnnn."
+            },
+            "billingAccountId": {
+              "type": "string",
+              "description": "ID of the billing account (which specifies invoice delivery details) for this order."
+            },
+            "contactId": {
+              "type": "string",
+              "description": "Elisa internal contact ID."
+            },
+            "personBillingAccountId": {
+              "type": "string",
+              "description": "ID of the billing account (which specifies invoice delivery details) for omalaitelasku order."
+            },
+            "onlineRequestId": {
+              "type": "string",
+              "description": "Unique Request Id generated by the caller system. UUID format."
+            },
+            "costCenter": {
+              "type": "string",
+              "description": "Cost center / cost pool to group subscription costs on invoices."
+            },
+            "catalogCode": {
+              "type": "string",
+              "description": "Catalog GUID of the products in the basket for omalaitelasku order."
+            },
+            "deliveryAddress": {
+              "required": [
+                "phoneNumber"
+              ],
+              "type": "object",
+              "properties": {
+                "companyName": {
+                  "type": "string",
+                  "description": "Name of the company for the delivery address."
+                },
+                "recipient": {
+                  "type": "string",
+                  "description": "Recipient person/location of the delivery within the delivery address."
+                },
+                "phoneNumber": {
+                  "type": "string",
+                  "description": "Contact phone number for the order delivery."
+                },
+                "address": {
+                  "type": "string"
+                },
+                "postOffice": {
+                  "type": "string"
+                },
+                "countryCode": {
+                  "type": "string"
+                },
+                "postalCode": {
+                  "type": "string"
+                }
+              }
+            },
+            "orderItems": {
+              "type": "array",
+              "items": {
+                "required": [
+                  "priceOptionId",
+                  "variantId",
+                  "quantity",
+                  "deliveryType"
+                ],
+                "properties": {
+                  "variantId": {
+                    "type": "string",
+                    "description": "ID of the exact product variant (under sales item) to order."
+                  },
+                  "priceOptionId": {
+                    "type": "string",
+                    "description": "ID of the exact product price option (under variant) to order."
+                  },
+                  "replacedSubscriptionId": {
+                    "description": "ID of the device subscription to modify. This id is only present in case of device change orders.",
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "The number of units ordered of this product."
+                  },
+                  "deliveryType": {
+                    "type": "string",
+                    "description": "Type of delivery for this order.",
+                    "enum": [
+                      "POSTI_ECONOMY",
+                      "POSTI_EXPRESS_MORNING",
+                      "POSTI_EXPRESS_BUSINESS",
+                      "MATKAHUOLTO_JAKOPAKETTI",
+                      "MATKAHUOLTO_LAHELLA_PAKETTI",
+                      "POSTI_SMARTPOST",
+                      "POSTI_SMARTPOST_EXPRESS",
+                      "LETTER"
+                    ]
+                  },
+                  "userContact": {
+                    "type": "object",
+                    "properties": {
+                      "contactId": {
+                        "type": "string",
+                        "description": "Elisa internal contact ID."
+                      },
+                      "firstName": {
+                        "type": "string"
+                      },
+                      "lastName": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "phone": {
+                        "type": "string"
+                      },
+                      "externalContactId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "redemptionOrderRequest": {
+      "type": "object",
+      "properties": {
+        "redemptionOrder": {
+          "type": "object",
+          "required": [
+            "subscriptionId",
+            "requestType"
+          ],
+          "properties": {
+            "subscriptionId": {
+              "type": "string",
+              "description": "SubscriptionId of the device which is to be redeemed."
+            },
+            "accountMasterId": {
+              "type": "string",
+              "description": "ID of the account (company or organization) to own the subscription ordered. Format MCOMnnnnnnnnn."
+            },
+            "requestType": {
+              "type": "string",
+              "description": "Type of redemption: COMPANY_REDEEM - customer company will receive ownership of the device and price is charged on billingAccount. EMPLOYEE_REDEEM - employee will receive ownership and price is charged on personBillingAccount (required in this case). EMPLOYEE_REDEEM_EXISTING_BA - employee will receive ownership and price is charged on existing OmaLaiteLasku agreement for the device (must exist to use this option).",
+              "enum": [
+                "COMPANY_REDEEM",
+                "EMPLOYEE_REDEEM",
+                "EMPLOYEE_REDEEM_EXISTING_BA"
+              ]
+            },
+            "billingAccountId": {
+              "type": "string",
+              "description": "ID of the billing account (which specifies invoice delivery details) for this order."
+            },
+            "personBillingAccountId": {
+              "type": "string",
+              "description": "This is only used in punchout integrations where Elisa provides the personBillingAccountId value after user authentication."
+            }
+          }
+        }
+      }
+    },
+    "Subscription": {
+      "required": [
+        "subscriptionId",
+        "subscriptionName",
+        "subscriptionStatus",
+        "contact",
+        "billingAccountId",
+        "imei",
+        "employeePaymentActivated"
+      ],
+      "properties": {
+        "subscriptionId": {
+          "type": "string",
+          "description": "Unique ID for the subscription. Generated by Elisa (SUBnnnnnnnnn)."
+        },
+        "subscriptionName": {
+          "type": "string",
+          "description": "Name of subscription."
+        },
+        "subscriptionStatus": {
+          "type": "string",
+          "enum": [
+            "CREATED",
+            "IN_ACTIVATION",
+            "ACTIVE",
+            "TERMINATED",
+            "SUSPENDED",
+            "CLOSED_REPLACED",
+            "ACTIVATION_CANCELLED"
+          ],
+          "description": "Status of the subscription."
+        },
+        "contact": {
+          "required": [
+            "contactId",
+            "contactName"
+          ],
+          "type": "object",
+          "properties": {
+            "contactId": {
+              "type": "string",
+              "description": "Unique ID of contact for subscription. Generated by Elisa (MCONnnnnnn)."
+            },
+            "contactName": {
+              "type": "string",
+              "description": "Name of contact for subscription."
+            }
+          }
+        },
+        "billingAccountId": {
+          "type": "string",
+          "description": "Unique id of the billing account. Generated by Elisa."
+        },
+        "costCenter": {
+          "type": "object",
+          "properties": {
+            "costCenterName": {
+              "type": "string",
+              "description": "Descriptive name for the cost center / cost pool if available."
+            },
+            "costCenterId": {
+              "type": "string",
+              "description": "Optional cost center / cost pool for this subscription. Can be used for grouping on the invoice."
+            }
+          }
+        },
+        "subscriptionReference": {
+          "type": "string",
+          "description": "Optional reference number for this subscription."
+        },
+        "imei": {
+          "description": "IMEI number of the device.",
+          "type": "string"
+        },
+        "employeePaymentActivated": {
+          "description": "Indicates shared employee payment (OmaLaiteLasku)",
+          "type": "boolean"
+        },
+        "deviceEnrollmentSystem": {
+          "type": "object",
+          "properties": {
+            "enrollmentProgramExternalId": {
+              "type": "string",
+              "description": "External Id of the enrollment program."
+            },
+            "enrollmentProgramSystem": {
+              "type": "string",
+              "description": "Source system of the enrollment program.",
+              "enum": [
+                "DEP",
+                "KME",
+                "ZEROTOUCH"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "orderResponse": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        }
+      }
+    },
+    "redemptionOrderResponse": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderStatus": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "Unique ID for the device order. Generated by Elisa (CNnnnnnnnnnnn)."
+        },
+        "subscriptionId": {
+          "type": "string",
+          "description": "Unique ID for the subscription. Generated by Elisa (SUBnnnnnnnnn)."
+        },
+        "orderStatus": {
+          "type": "string",
+          "enum": [
+            "IN_PROGRESS",
+            "COMPLETED",
+            "CANCELLED",
+            "FAILED",
+            "PARTIALLY_COMPLETED",
+            "PENDING",
+            "PARTIALLY_FAILED",
+            "PENDING_APPROVAL"
+          ],
+          "description": "Customer device order status."
+        },
+        "deliveryDetails": {
+          "type": "object",
+          "properties": {
+            "trackingCode": {
+              "type": "string",
+              "description": "Tracking code for the shipped package."
+            },
+            "imei": {
+              "description": "IMEI number of the device.",
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
