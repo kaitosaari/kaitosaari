@@ -32,4 +32,4 @@ jobs:
         uses: ./swagger-editor-validate
         with:
           swagger-editor-url: http://localhost/
-          definition-file: api-yrdy/devices-api_swagger.json
+          definition-file: api-test/api_swagger.json
