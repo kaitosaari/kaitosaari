@@ -10,10 +10,10 @@ jobs:
 
     - name: Use local action
       id: example
-      uses: ./
+      uses: ./swagger-validator-2
       with:
         files: |
-          example.openapi.yaml
+          swagger-validator-2/example.openapi.yaml
     - name: Output export variable
       run: |
         echo ${{ steps.example.outputs.validFiles }}
