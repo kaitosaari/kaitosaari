@@ -1,0 +1,23 @@
+name: 'Validate Swagger and OpenAPI using Swagger CLI'
+description: 'Access to the swagger-cli via a github action'
+
+branding:
+  icon: 'award'
+  color: 'green'
+
+inputs:
+  files:
+    description: 'List of Swagger/OpenAPI file(s) to validate. Seperate each file with a new line or a space.'
+    required: true
+  space_separated:
+    description: 'Defaults to true.'
+    required: false
+outputs:
+  invalidFiles:
+    description: 'List of invalid files.'
+  validFiles:
+    description: 'List of valid files.'
+
+runs:
+  using: 'node12'
+  main: 'index.js'
