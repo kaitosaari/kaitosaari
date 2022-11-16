@@ -21,3 +21,6 @@ outputs:
 runs:
   using: 'node12'
   main: 'index.js'
+  steps:
+    - run: cd ${{ github.action_path }} && npm install
+      shell: bash
