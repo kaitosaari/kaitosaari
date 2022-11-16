@@ -19,9 +19,9 @@ outputs:
     description: 'List of valid files.'
 
 runs:
-#  using: 'node12'
-#  main: 'index.js'
-  using: composite
-  steps:
-    - run: cd ${{ github.action_path }} && npm install
-      shell: bash
+  using: 'node12'
+  main: 'index.js'
+#  using: composite
+#  steps:
+#    - run: cd ${{ github.action_path }} && npm install
+#      shell: bash
